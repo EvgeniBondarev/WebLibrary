@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <table>
+     <p>Пользователь - {{ user.first_name }} {{ user.middle_name }}</p>
+    </table>
+    <h1>Список выдач книг читателю</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Книга</th>
+                <th>Дата выдачи</th>
+                <th>Дата возврата</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for book_loan in book_loans %}
+                <tr>
+                    <td>{{ book_loan.book.title }}</td>
+                    <td>{{ book_loan.loan_date }}</td>
+                    <td>
+                        {% if book_loan.return_date %}
+                            {{ book_loan.return_date }}
+                        {% else %}
+                            Не возвращена
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
