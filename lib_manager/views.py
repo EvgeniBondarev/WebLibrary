@@ -119,3 +119,7 @@ def all_books(request):
         book_form = BookCode()
         return render(request, "all_books.html", {'user': user, 'books': books, 'form': book_form})
 
+def book_loan_list_view(request):
+    book_loans = BookLoan.objects.all()
+    return render(request, 'book_loans.html', {'book_loans': book_loans})
+
