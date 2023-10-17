@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+ <h1>Список выдач книг читателю</h1>
+    {% if user_books %}
+    <table>
+        <thead>
+            <tr>
+                <th>Книга</th>
+                <th>Код</th>
+                <th>Дата выдачи</th>
+                <th>Статус</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            {% for book in user_books %}
+                <tr>
+                    <td>{{ book.book.title }} <br> {{ book.book.author }}</td>
+                    <td>{{ book.book.code }}</td>
+                    <td>{{ book.loan_date  }}</td>
+                    <td>
+                         {% if book_loan.return_date %}
+                            {{ book_loan.return_date }}
+                        {% else %}
+                            Не возвращена
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+            <h2>У Вас нет книг</h2>
+    {% endif %}
+    {% if user_books %}
+    <h1>Сдать книгу по коду:</h1>
+    <form method="POST">
+            {% csrf_token %}
+        <table>
+            {{ form }}
+        </table>
+        <input type="submit" value="Подтвердить" >
+    </form>
+    {% endif %}
+{% endblock %}

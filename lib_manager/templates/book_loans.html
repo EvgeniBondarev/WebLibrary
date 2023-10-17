@@ -1,0 +1,30 @@
+
+     <h1>Информация о выдаче книг</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Книга</th>
+                <th>Читатель</th>
+                <th>Дата выдачи</th>
+                <th>Дата возврата</th>
+                <th>Код</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for book_loan in book_loans %}
+                <tr>
+                    <td>{{ book_loan.book.title }}</td>
+                    <td>{{ book_loan.reader }}</td>
+                    <td>{{ book_loan.loan_date }}</td>
+                    <td>
+                         {% if book_loan.return_date %}
+                            {{ book_loan.return_date }}
+                        {% else %}
+                            Не возвращена
+                        {% endif %}
+                    </td>
+                    <td>{{ book_loan.book.code }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>

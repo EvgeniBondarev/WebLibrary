@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Список книг</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Название</th>
+                <th>Автор</th>
+                <th>Код</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for book in books %}
+                <tr>
+                    <td>{{ book.title }}</td>
+                    <td>{{ book.author }}</td>
+                    <td>{{ book.code }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+<h1>Получить книгу по коду:</h1>
+    <form method="POST">
+            {% csrf_token %}
+        <table>
+            {{ form }}
+        </table>
+        <input type="submit" value="Получить" >
+    </form>
+{% endblock %}
