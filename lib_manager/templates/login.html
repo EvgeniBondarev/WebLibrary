@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
-<body>
     <form method="POST">
-        {% csrf_token %}
-    <table>
-        {{ form }}
-    </table>
-    <input type="submit" value="Войти" >
-        <a href="/registration">Регистрация</a>
+            {% csrf_token %}
+        <table>
+            {{ form }}
+        </table>
+        <input type="submit" value="Войти" >
+    </form>
+    <a href="/registration">Регистрация</a>
 </body>
 </html>

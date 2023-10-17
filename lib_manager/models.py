@@ -10,6 +10,9 @@ class Author(models.Model):
         db_table = 'author'
         unique_together = ['first_name', 'last_name', 'middle_name']
 
+    def __str__(self):
+        return f"{self.last_name} {self.first_name} {self.middle_name}"
+
 class Reader(models.Model):
     """Модель для хранения информации о читателях."""
     first_name = models.CharField(max_length=100, verbose_name="Имя")
@@ -27,6 +30,7 @@ class Book(models.Model):
     """Модель для хранения информации о книгах."""
     title = models.CharField(max_length=200, verbose_name="Название")
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
+    code = models.IntegerField(max_length=4, verbose_name="Код", unique=True, null=True, blank=True)
     is_visible = models.BooleanField(default=True)
 
     class Meta:
