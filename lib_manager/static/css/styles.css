@@ -1,0 +1,132 @@
+ body {
+        font-family: Arial, sans-serif;
+    }
+
+    /* Стили для навигации */
+    .navigation {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+    }
+
+    .navigation-links {
+        display: flex;
+    }
+
+    .navigation-links a {
+        text-decoration: none;
+        background-color: #4CAF50;
+        color: #fff;
+        padding: 10px 20px;
+        margin-right: 10px;
+        border-radius: 5px;
+    }
+
+    /* Стили для контента */
+    .content {
+        margin: 20px;
+    }
+
+    /* Стили для пользователя */
+    .user-info {
+        text-align: right;
+    }
+
+    .user-info a {
+        color: #4CAF50;
+        margin-left: 10px;
+    }
+
+    /* Стили для полей ввода */
+    .input-field {
+        margin: 10px 0;
+        padding: 5px;
+        width: 100%;
+    }
+
+    /* Стили для сообщений об ошибке */
+    .error-message {
+        background-color: #ff0000;
+        color: #fff;
+        padding: 10px;
+        text-align: center;
+    }
+
+    /* Стили для таблиц */
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #4CAF50;
+        color: #fff;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    /* Стили для формы */
+    .form-container {
+        max-width: 400px;
+        margin: 0 auto;
+        border: 1px solid #ccc;
+        padding: 20px;
+        border-radius: 5px;
+    }
+
+    .table-container {
+        text-align: left;
+    }
+
+    /* Стили для кнопки "Войти" */
+    .submit-button.center {
+        background-color: #4CAF50;
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        display: block;
+        margin: 0 auto;
+    }
+    .submit-button {
+    background-color: #4CAF50;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    }
+
+    .submit-button:hover {
+        background-color: #45a049;
+    }
+
+    /* Стили для ссылок */
+    .links {
+        margin-top: 20px;
+    }
+
+    .links a {
+        text-decoration: none;
+        color: #4CAF50;
+        margin: 0 10px;
+    }
+
+    .error-message {
+        background-color: #ff0000;
+        color: #fff;
+        padding: 20px;
+        text-align: center;
+    }

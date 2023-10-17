@@ -1,15 +1,27 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
     <title>Title</title>
 </head>
 <body>
-    <form method="POST">
-        {% csrf_token %}
-    <table>
-        {{ form }}
-    </table>
-    <input type="submit" value="Регистрация" >
+    {% if error_message %}
+            <div class="error-message">
+                {{ error_message }}
+            </div>
+    {% endif %}
+    <div class="form-container">
+        <form method="POST">
+            {% csrf_token %}
+            <table>
+                {{ form }}
+
+            </table>
+            <br><br>
+            <input type="submit" value="Регистрация" class="submit-button center">
+        </form>
+    </div>
 </body>
 </html>

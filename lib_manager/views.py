@@ -14,25 +14,23 @@ def login(request):
             return redirect(f"/user_page?reader_id={reader.pk}")
         else:
             login_form = LogIn()
-            return render(request, "login.html", {"form": login_form})
-    else:
-        login_form = LogIn()
-        return render(request, "login.html", {"form": login_form})
+            return render(request, "login.html", {"form": login_form, 'error_message': 'Данные формы не валидны'})
+
+    login_form = LogIn()
+    return render(request, "login.html", {"form": login_form})
 
 
 def registration(request):
     if request.method == "POST":
-        reader = Register(request.POST)
-        if reader.is_valid():
-            reader.save()
-            login_form = LogIn()
-            return render(request, "login.html", {"form": login_form})
+        registration_form = Register(request.POST)
+        if registration_form.is_valid():
+            registration_form.save()
+            return redirect('/')
         else:
-            registr_form = Register()
-            return render(request, "registration.html", {"form": registr_form})
-    else:
-        registr_form = Register()
-        return render(request, "registration.html", {"form": registr_form})
+            return render(request, "registration.html", {"form": registration_form, 'error_message': 'Данные формы не валидны'})
+
+    registration_form = Register()
+    return render(request, "registration.html", {"form": registration_form})
 
 
 def user_page(request):
@@ -40,48 +38,45 @@ def user_page(request):
     reader_id = request.GET.get("reader_id")
 
     if reader_id:
-        user = Reader.objects.get(pk=reader_id)
-        book_loans = BookLoan.objects.filter(reader_id=reader_id)
-
-        return render(request, "base.html", {"user": user, 'book_loans': book_loans})
-    else:
-        login_form = LogIn()
-        return render(request, "login.html", {"form": login_form})
+        try:
+            user = Reader.objects.get(pk=reader_id)
+            book_loans = BookLoan.objects.filter(reader_id=reader_id)
+            return render(request, "base.html", {"user": user, 'book_loans': book_loans})
+        except Reader.DoesNotExist:
+            pass
+    login_form = LogIn()
+    return render(request, "login.html", {"form": login_form})
 
 def user_books(request):
     """Список книг пользователя с возможностью их возврата"""
     reader_id = request.GET.get("reader_id")
+    user = Reader.objects.get(pk=reader_id)
+    user_books = BookLoan.objects.filter(reader_id=reader_id, return_date__isnull=True)
+
     if request.method == "POST":
-        book_code = BookCode(request.POST)
-        if book_code.is_valid():
+        book_form = BookCode(request.POST)
+
+        if book_form.is_valid():
+            code = book_form.cleaned_data['code']
             try:
-                code = book_code.cleaned_data['code']
-
                 book = Book.objects.get(code=int(code))
-                reader = Reader.objects.get(pk=reader_id)
-                book_loan = BookLoan.objects.get(book=book, return_date=None, reader=reader)
-
+                book_loan = BookLoan.objects.get(book=book, return_date=None, reader=user)
                 book_loan.return_date = datetime.now()
                 book_loan.save()
-
                 book.is_visible = True
                 book.save()
-
                 return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
 
             except Book.DoesNotExist:
-                return HttpResponse("Книга не найдена")
+               return render(request, "user_books.html", {'user': user, 'user_books': user_books, 'form': book_form, 'error_message': 'Книга не найдена'})
 
             except BookLoan.DoesNotExist:
-                return HttpResponse(f"Соответствующая запись для '{ reader.first_name } { reader.middle_name }' не найдена")
+                return render(request, "user_books.html", {'user': user, 'user_books': user_books, 'form': book_form, 'error_message': f"Соответствующая запись для "
+                                                                                                                                      f"'{user.first_name} {user.middle_name}'"
+                                                                                                                                       f" не найдена"})
         else:
-            user = Reader.objects.get(pk=reader_id)
-            user_books = BookLoan.objects.filter(reader_id=reader_id, return_date__isnull=True)
-            book_form = BookCode()
-            return render(request, "user_books.html", {'user': user, 'user_books': user_books, 'form': book_form})
+            return render(request, "user_books.html", {'user': user, 'user_books': user_books, 'form': book_form, 'error_message': 'Данные формы не валидны'})
     else:
-        user = Reader.objects.get(pk=reader_id)
-        user_books = BookLoan.objects.filter(reader_id=reader_id, return_date__isnull=True)
         book_form = BookCode()
         return render(request, "user_books.html", {'user': user, 'user_books': user_books, 'form': book_form})
 
@@ -91,30 +86,26 @@ def all_books(request):
     user = Reader.objects.get(pk=reader_id)
     books = Book.objects.filter(is_visible=True)
 
-    book_code = BookCode(request.POST)
     if request.method == "POST":
-        if book_code.is_valid():
+        book_form = BookCode(request.POST)
+        if book_form.is_valid():
+            code = book_form.cleaned_data['code']
             try:
-                code = book_code.cleaned_data['code']
                 book = Book.objects.get(code=int(code))
                 reader = Reader.objects.get(pk=reader_id)
 
-                book_loan = BookLoan(book=book, reader=reader)
-                book_loan.save()
-
-                book.is_visible = False
-                book.save()
-
-                return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
-
+                if BookLoan.objects.filter(book=book, reader=reader, return_date=None).exists():
+                    return render(request, "all_books.html", {'user': user, 'books': books, 'form': book_form, 'error_message': f"Книга '{book.title}' уже выдана вам"})
+                else:
+                    book_loan = BookLoan(book=book, reader=reader)
+                    book_loan.save()
+                    book.is_visible = False
+                    book.save()
+                    return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
             except Book.DoesNotExist:
-                return HttpResponse("Книга не найдена")
-
-            except BookLoan.DoesNotExist:
-                return HttpResponse(f"Соответствующая запись для '{ reader.first_name } { reader.middle_name }' не найдена")
+                return render(request, "all_books.html", {'user': user, 'books': books, 'form': book_form, 'error_message': 'Книга не найдена'})
         else:
-            registr_form = Register()
-            return render(request, "registration.html", {"form": registr_form})
+            return render(request, "all_books.html", {'user': user, 'books': books, 'form': book_form, 'error_message': 'Данные формы не валидны'})
     else:
         book_form = BookCode()
         return render(request, "all_books.html", {'user': user, 'books': books, 'form': book_form})

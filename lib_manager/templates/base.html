@@ -1,45 +1,56 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
     <title>Title</title>
 </head>
 <body>
-    <table>
-     <p>Пользователь - {{ user.first_name }} {{ user.middle_name }}</p>
-    </table>
-    <a href="/user_page?reader_id={{ user.pk }}">Главная</a>
-    <a href="/all_books?reader_id={{ user.pk }}">Все книги</a>
-    <a href="/user_books?reader_id={{ user.pk }}">Сдать книгу</a>
-    <a href="/">Выйти</a>
-
-    {% block content %}
-    <h1>Список выдач книг читателю</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>Книга</th>
-                <th>Дата выдачи</th>
-                <th>Дата возврата</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for book_loan in book_loans %}
+    <div class="navigation">
+        <div class="navigation-links">
+            <a href="/user_page?reader_id={{ user.pk }}">Главная</a>
+            <a href="/all_books?reader_id={{ user.pk }}">Получить книгу</a>
+            <a href="/user_books?reader_id={{ user.pk }}">Сдать книгу</a>
+        </div>
+        <div class="user-info">
+            <h4>{{ user.first_name }} {{ user.middle_name }}</h4>
+            <a href="/">Выйти</a>
+        </div>
+    </div>
+    {% if error_message %}
+            <div class="error-message">
+                {{ error_message }}
+            </div>
+    {% endif %}
+    <div class="content">
+        {% block content %}
+        <h1>Список выдач книг читателю</h1>
+        <table>
+            <thead>
                 <tr>
-                    <td>{{ book_loan.book.title }}</td>
-                    <td>{{ book_loan.loan_date }}</td>
-                    <td>
-                        {% if book_loan.return_date %}
-                            {{ book_loan.return_date }}
-                        {% else %}
-                            Не возвращена
-                        {% endif %}
-                    </td>
+                    <th>Книга</th>
+                    <th>Дата выдачи</th>
+                    <th>Дата возврата</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-   {% endblock %}
-
+            </thead>
+            <tbody>
+                {% for book_loan in book_loans %}
+                    <tr>
+                        <td>{{ book_loan.book.title }}</td>
+                        <td>{{ book_loan.loan_date }}</td>
+                        <td>
+                            {% if book_loan.return_date %}
+                                {{ book_loan.return_date }}
+                            {% else %}
+                                Не возвращена
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endblock %}
+    </div>
 </body>
 </html>

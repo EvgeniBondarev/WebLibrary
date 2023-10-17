@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 
+
 {% block content %}
  <h1>Список выдач книг читателю</h1>
     {% if user_books %}
@@ -13,7 +14,6 @@
             </tr>
         </thead>
         <tbody>
-
             {% for book in user_books %}
                 <tr>
                     <td>{{ book.book.title }} <br> {{ book.book.author }}</td>
@@ -36,11 +36,15 @@
     {% if user_books %}
     <h1>Сдать книгу по коду:</h1>
     <form method="POST">
-            {% csrf_token %}
-        <table>
+    {% csrf_token %}
+    <div class="table-container">
+        <table style="width: 300px;">
             {{ form }}
         </table>
-        <input type="submit" value="Подтвердить" >
-    </form>
+    </div>
+    <br><br>
+    <input type="submit" value="Подтвердить" class="submit-button">
+</form>
     {% endif %}
+</style>
 {% endblock %}

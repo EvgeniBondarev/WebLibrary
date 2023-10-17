@@ -1,5 +1,13 @@
-
-     <h1>Информация о выдаче книг</h1>
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Информация о выдаче книг</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+</head>
+<body>
+    <h1>Информация о выдаче книг</h1>
     <table>
         <thead>
             <tr>
@@ -28,3 +36,5 @@
             {% endfor %}
         </tbody>
     </table>
+</body>
+</html>

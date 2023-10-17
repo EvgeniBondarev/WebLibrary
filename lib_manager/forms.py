@@ -9,11 +9,13 @@ class LogIn(forms.Form):
 
 
 class Register(forms.ModelForm):
+    """Форма регистрауии"""
     class Meta:
         model = Reader
         fields = ["last_name", "first_name", "middle_name"]
 
 class BookCode(forms.Form):
+    """Форма ввода кода книги"""
     code = forms.CharField(
         label="Код",
         max_length=4,
